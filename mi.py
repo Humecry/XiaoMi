@@ -7,6 +7,7 @@
 # @Version : 1.0
 # @Description: 参与小米钱包福利专区的抽奖
 import os
+import sys
 import selenium
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -17,6 +18,8 @@ import re
 from io import BytesIO
 import tesserocr
 from tesserocr import PyTessBaseAPI
+# 引入配置文件
+from conf import *
 
 # Mac脚本通知
 def notify(title, text):
@@ -99,7 +102,9 @@ def mi(cookies):
 		driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)=''])[1]/following::li[2]").click()
 		driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)=''])[1]/following::li[7]").click()
 		driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)=''])[1]/following::li[9]").click()
+		sleep(1)
 		driver.find_element_by_link_text("确定").click()
+		sleep(1)
 		driver.find_element_by_link_text("继续参与").click()
 		driver.get(driver.current_url)
 		sleep(2)
@@ -115,25 +120,18 @@ def mi(cookies):
 	notify('小米抽奖活动', '共有'+ str(total) + '个活动, ' + '其中参与了' + str(count) + '个活动.')
 	if total == count:
 		os.system('say 已抽完奖, 共参与了' + str(total) + '个活动')
+		print('已抽完奖, 共参与了' + str(total) + '个活动')
+		sys.stdout.write('hello'+'\n')
 	else:
 		os.system('say 还有' + str(total-count) + '个活动未完成')
+		print('还有' + str(total-count) + '个活动未完成')
 	sleep(60)
 	driver.quit()
 	return driver
 
 def main():
-	cookies = {
-			'cUserId': '8gnaYn9uFthE-7X4JEGWfvaRFas',
-			'mipaycommon_serviceToken': 'xTpaEftBBEkPi1kDuh8RzSNrt3ZSfcM5nlQzTv0E5a6kKOu4wJKxevWBs7Mz4iRIcm0zwqm8kfpFbHJ6bTU8ww+LaQGub0gID4u1Y2r9WQaiKywiKPQOhO+a8eDzmTC/Gt/RGOuKSB1J27kiTEa5Z7DEsNQjL3cQ+4dquQ35IwVfaRc00rlHKSblOhn9QTqvfNSd2fAKG7xqyC47cr/GAH9hkHjm1YMMZaf0aP6ND4KrPVqy8jyUAySJqD5pbsf1fJbtTy4dZCuO/5EdnzJSjQ==',
-			'mipaycommon_ph': '8/gWtewqU/a9fGNYJ+OKjg==',
-			
-			'serviceToken': '/3Y2JuOdJ7G5H4fmHjq9sjawBqXPyJYWkD2/PX00fnk9IbtXMLMku5ReuiWSoQ6MtdQwC9zmI+KzF7dMfi5LgnM7+Zfk5317jqVpg8x/VFPEIsub3sxL1jMIuXQS8SJG5Px9SrjRiPhnqahX3lUscdtseONaDovK1RQG+yjnqRSiyQyUusBDi5ghlwxkGmq+nihQFQxmD4nU9q6UBB8H+dBz0Yv9QyByxjdhGmd5JC6jNb6TErbDJ4cbf9p8YZgGz37NTDjRGnvTM9kp82B4Ng==',
-			'cashpay-wap_slh': 'SwtN8CYPOFatuodkSDZC1z5I9Tg=',
-			'cashpay-wap_ph': 'wYSK9zS4XBpve+KP/NlsyQ==',
-		}
-
 	try:
-		driver = mi(cookies)
+		driver = mi(COOKIES)
 	except:
 		sleep(60)
 		driver.quit()
